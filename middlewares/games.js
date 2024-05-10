@@ -1,10 +1,17 @@
 const games = require("../models/games");
 
 const findAllGames = async (req, res, next) => {
-  req.gamesArray = await games
-    .find({})
-    .populate("categories")
-    .populate({ path: "users", select: "-password" });
+  if (req.query["categories.name"]) {
+    req.gamesArray = await games.findGameByCategory(
+      req.query["categories.name"]
+    );
+    next();
+    return;
+  }
+  req.gamesArray = await games.find({}).populate("categories").populate({
+    path: "users",
+    select: "-password",
+  });
   next();
 };
 const findGameById = async (req, res, next) => {
@@ -94,7 +101,7 @@ const deleteGame = async (req, res, next) => {
     next();
   } catch (error) {
     res.setHeader("Content-Type", "application/json");
-        res.status(400).send(JSON.stringify({ message: "Ошибка удаления игры" }));
+    res.status(400).send(JSON.stringify({ message: "Ошибка удаления игры" }));
   }
 };
 const updateGame = async (req, res, next) => {

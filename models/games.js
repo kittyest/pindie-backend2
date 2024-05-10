@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
-const categories = require("./categories");
-const users = require("./users");
+const userModel = require("./users");
+const categoryModel = require("./categories");
 
 const gameSchema = new mongoose.Schema({
   title: {
@@ -23,19 +23,34 @@ const gameSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  categories: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: categories,
-    },
-  ],
   users: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: users,
+      ref: userModel,
+    },
+  ],
+  categories: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: categoryModel,
     },
   ],
 });
 
-const games = mongoose.model("games", gameSchema);
+gameSchema.statics.findGameByCategory = function (category) {
+  return this.find({})
+    .populate({
+      path: "categories",
+      match: { name: category },
+    })
+    .populate({
+      path: "users",
+      select: "-password",
+    })
+    .then((games) => {
+      return games.filter((game) => game.categories.length > 0);
+    });
+};
+
+const games = mongoose.model('games', gameSchema);
 module.exports = games;
