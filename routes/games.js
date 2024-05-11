@@ -4,6 +4,7 @@ const {
   findAllGames,
   createGame,
   findGameById,
+  checkIsVoteRequest,
   updateGame,
   deleteGame,
   checkEmptyFields,
@@ -36,7 +37,7 @@ gamesRouter.delete("/games/:id",checkAuth, findGameById, deleteGame, sendGameDel
 gamesRouter.put(
   "/games/:id",
   findGameById,
-  // checkIsVoteRequest,
+  checkIsVoteRequest,
   checkIfUsersAreSafe,
   checkIfCategoriesAvaliable,
   checkEmptyFields,
