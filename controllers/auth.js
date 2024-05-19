@@ -13,10 +13,10 @@ const login = (req, res) => {
       });
       return { user, token };
     })
-    .then((user) => {
+    .then(({ user, token }) => {
       res
         .status(200)
-        .send({ _id: user._id, username: user.username, email: user.email });
+        .send({ _id: user._id, username: user.username, email: user.email, jwt: token });
     })
     .catch((error) => {
       res.status(401).send({ message: error.message });
