@@ -18,8 +18,8 @@ app.use(
   cors,
   cookieParser(),
   bodyParser.json(),
-  apiRouter,
   pagesRouter,
+  apiRouter,
   express.static(path.join(__dirname, "public")),
 
 );
